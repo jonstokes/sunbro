@@ -1,5 +1,3 @@
-require 'net/http/persistent'
-
 module Sunbro
   class HTTP
     # Maximum number of redirects to follow on each get_response

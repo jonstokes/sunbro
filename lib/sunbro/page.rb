@@ -1,6 +1,3 @@
-require 'nokogiri'
-require 'webrick/cookie'
-
 module Sunbro
   class Page
 

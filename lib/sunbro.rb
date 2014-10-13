@@ -1,4 +1,16 @@
-require "sunbro/version"
+require 'nokogiri'
+require 'capybara/poltergeist'
+require 'net/http/persistent'
+require 'webrick/cookie'
+
+%w(
+  sunbro/version
+  sunbro/dynamic_http
+  sunbro/http
+  sunbro/page
+).each do |f|
+  require f
+end
 
 module Sunbro
   MAX_RETRIES = 5

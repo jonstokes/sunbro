@@ -1,5 +1,3 @@
-require 'capybara/poltergeist'
-
 module Sunbro
   class DynamicHTTP
     attr_reader :session
