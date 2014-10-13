@@ -23,8 +23,14 @@ module Sunbro
       Capybara.javascript_driver = :poltergeist
       Capybara.run_server = false
       @session = Capybara::Session.new(:poltergeist)
-      @session.driver.headers = { 'User-Agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X)" }
+      @session.driver.headers = {
+        'User-Agent' => user_agent
+      }
       @session
+    end
+
+    def user_agent
+      @opts[:agent] || "Mozilla/5.0 (Macintosh; Intel Mac OS X)"
     end
 
     def restart_session
