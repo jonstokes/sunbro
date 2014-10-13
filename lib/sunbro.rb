@@ -42,7 +42,7 @@ module Sunbro
   end
 
   class Test
-    extend PageUtils
+    extend Sunbro
 
     def self.fetch_page(link, opts={})
       get_page(link, opts)

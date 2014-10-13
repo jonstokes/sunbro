@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Sunbro::VERSION
   spec.authors       = ["Jon Stokes"]
   spec.email         = ["jon@jonstokes.com"]
-  spec.summary       = %q{Some code that I use to crawl the web at scale.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Some code that I use to crawl the web at scale. Shared in the spirit of jolly cooperation.}
+  spec.description   = %q{Requires phantomjs.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
