@@ -21,7 +21,11 @@ module Sunbro
     # Just gets the final destination page.
     #
     def fetch_page(url, opts={})
-      fetch_pages(url, opts).last
+      pages = fetch_pages(url, opts)
+      return pages.first if (pages.count == 1)
+
+      pages.last.redirect_from = pages.first.url
+      pages.last
     end
 
     #

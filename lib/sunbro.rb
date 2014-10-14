@@ -29,11 +29,11 @@ module Sunbro
   def fetch_with_connection(conn, link, opts)
     page, tries = nil, MAX_RETRIES
     begin
-      page = conn.fetch_page(link, opts)
+      page = conn.fetch_pages(link, opts)
       sleep 1
-    end until page.try(:present?) || (tries -= 1).zero?
-    page.discard_doc! unless page.is_valid?
-    page
+    end until pages.last.try(:present?) || (tries -= 1).zero?
+    pages.each { |page| page.discard_doc! unless page.is_valid? }
+    pages
   end
 
   def close_http_connections
@@ -44,9 +44,5 @@ module Sunbro
 
   class Test
     extend Sunbro
-
-    def self.fetch_page(link, opts={})
-      get_page(link, opts)
-    end
   end
 end

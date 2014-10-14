@@ -24,6 +24,8 @@ module Sunbro
     # Response time of the request for this page in milliseconds
     attr_accessor :response_time
 
+    attr_accessor :redirect_from
+
     #
     # Create a new page
     #
