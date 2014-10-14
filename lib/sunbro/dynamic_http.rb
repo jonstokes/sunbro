@@ -56,12 +56,12 @@ module Sunbro
 
     def get_page(url, opts)
       session.visit(url.to_s)
-      page = PageUtils::Page.new(
+      page = Page.new(
         session.current_url,
         :body => session.html.dup,
         :code => session.status_code,
         :headers => session.response_headers,
-        :force_format => opts[:force_format]
+        :force_format => (opts[:force_format] || default_page_format)
       )
       session.reset!
       page
@@ -97,5 +97,14 @@ module Sunbro
     def read_timeout
       @opts[:read_timeout]
     end
+
+    private
+
+    def default_page_format
+      # Don't force the page format if the default format is set to :any
+      return unless [:xml, :html].include? Settings.page_format
+      Settings.page_format
+    end
+
   end
 end
