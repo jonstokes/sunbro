@@ -198,6 +198,7 @@ module Sunbro
        'depth' => @depth,
        'referer' => @referer.to_s,
        'redirect_to' => @redirect_to.to_s,
+       'redirect_from' => @redirect_from.to_s,
        'response_time' => @response_time,
        'fetched' => @fetched}
     end
@@ -210,7 +211,8 @@ module Sunbro
        '@visited' => hash['visited'],
        '@depth' => hash['depth'].to_i,
        '@referer' => hash['referer'],
-       '@redirect_to' => (!!hash['redirect_to'] && !hash['redirect_to'].empty?) ? URI(hash['redirect_to']) : nil,
+       '@redirect_to' => (hash['redirect_to'].present?) ? URI(hash['redirect_to']) : nil,
+       '@redirect_from' => (hash['redirect_from'].present?) ? URI(hash['redirect_from']) : nil,
        '@response_time' => hash['response_time'].to_i,
        '@fetched' => hash['fetched']
       }.each do |var, value|
