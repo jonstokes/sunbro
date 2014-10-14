@@ -29,7 +29,8 @@ module Sunbro
     # including redirects
     #
     def fetch_pages(url, opts={})
-      referer, depth, force_format = opts[:referer], opts[:depth], opts[:force_format]
+      referer, depth = opts[:referer], opts[:depth]
+      force_format = opts[:force_format] || default_page_format
       begin
         url = convert_to_uri(url) unless url.is_a?(URI)
         pages = []
@@ -75,7 +76,7 @@ module Sunbro
     # or nil if no such option is set
     #
     def user_agent
-      @opts[:agent] || "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36"
+      @opts[:agent] || Settings.user_agent
     end
 
     #
@@ -192,6 +193,14 @@ module Sunbro
       to_url.host.nil? || (to_url.host.sub("www.","") == from_url.host.sub("www.",""))
     rescue
       true
+    end
+
+    private
+
+    def default_page_format
+      # Don't force the page format if the default format is set to :any
+      return unless [:xml, :html].include? Settings.page_format
+      Settings.page_format
     end
 
   end

@@ -5,6 +5,7 @@ require 'webrick/cookie'
 
 %w(
   sunbro/version
+  sunbro/settings
   sunbro/dynamic_http
   sunbro/http
   sunbro/page

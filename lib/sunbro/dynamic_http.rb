@@ -30,7 +30,7 @@ module Sunbro
     end
 
     def user_agent
-      @opts[:agent] || "Mozilla/5.0 (Macintosh; Intel Mac OS X)"
+      @opts[:agent] || Settings.phantomjs_user_agent
     end
 
     def restart_session

@@ -4,7 +4,7 @@ require 'mocktra'
 describe Sunbro::Page do
 
   before :each do
-    @http = Sunbro::HTTP.new
+    @http = Sunbro::HTTP.new(verbose: true)
   end
 
   describe "#initialize", no_es: true do
