@@ -190,18 +190,19 @@ module Sunbro
     end
 
     def to_hash
-      {'url'           => @url.to_s,
-       'headers'       => headers.to_json,
-       'body'          => @body,
-       'code'          => @code,
-       'error'         => @error.to_s,
-       'visited'       => @visited,
-       'depth'         => @depth,
-       'referer'       => @referer.to_s,
-       'redirect_to'   => @redirect_to.to_s,
-       'redirect_from' => @redirect_from.to_s,
-       'response_time' => @response_time,
-       'fetched'       => @fetched}
+      {
+        'url'           => @url.to_s,
+        'headers'       => headers.to_json,
+        'body'          => @body,
+        'code'          => @code,
+        'error'         => (@error ? @error.to_s : nil),
+        'visited'       => @visited,
+        'referer'       => (@referer ? @referer.to_s : nil),
+        'redirect_to'   => (@redirect_to ? @redirect_to.to_s : nil),
+        'redirect_from' => (@redirect_from ? @redirect_from.to_s : nil),
+        'response_time' => @response_time,
+        'fetched'       => @fetched
+      }.reject { |k, v| v.nil? }
     end
 
     def self.from_hash(hash)
@@ -211,7 +212,6 @@ module Sunbro
        '@code'          => hash['code'].to_i,
        '@error'         => hash['error'],
        '@visited'       => hash['visited'],
-       '@depth'         => hash['depth'].to_i,
        '@referer'       => hash['referer'],
        '@redirect_to'   => (hash['redirect_to'].present?) ? URI(hash['redirect_to']) : nil,
        '@redirect_from' => (hash['redirect_from'].present?) ? URI(hash['redirect_from']) : nil,
