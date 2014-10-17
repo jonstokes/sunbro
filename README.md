@@ -1,8 +1,7 @@
 # Sunbro
 
 Some code that I use to crawl the web at scale with Poltergeist and
-PhantomJS. Uses a bunch of code from the venerable [anemone gem](https://github.com/chriskite/anemone).
-Released in the spirit of jolly cooperation.
+PhantomJS (cf. [stretched.io](https://github.com/jonstokes/stretched.io)). Uses a bunch of code from the venerable [anemone gem](https://github.com/chriskite/anemone). Released in the spirit of jolly cooperation.
 
 ## Installation
 
@@ -20,8 +19,14 @@ Or install it yourself as:
 
 ## Usage
 
-I use sunbro to crawl the web at scale via Sidekiq on EC2. Here's an
-example of a worker that looks something like what you might find in my code:
+I use sunbro to crawl the web at scale via Sidekiq on EC2. I've found
+that web scraping with capybara/poltergeist + phantomjs is a giant pain
+on JRuby (for various reasons that you'll encounter once you try it), 
+and this gem is basically my collection of fixes that makes it actually
+work. And it works pretty well; I use in production to crawl
+230 sites and counting.
+
+Here's an example of a worker that looks something like what you might find in my code:
 
 ```ruby
 class CrawlerWorker
@@ -44,8 +49,9 @@ end
 
 The above uses `net-http` to fetch connections, and it pools
 them. This is all you need most of the time. However, if you're scraping
-a page that is AJAX-heavy, you'll want to call `connection.render_page(link)`,
-because that will use PhantomJS to pull and render the page.
+a page that is AJAX-heavy, that's where you'll get the most out of sunbro.
+To use phantomjs to scrape a page, you'll want to call `connection.render_page(link)`.
+This renders the JS on the page, but doesn't download any images.
 
 The one option to either `get_page` or `render_page` is
 `:force_format`, can be one of `:html`, `:xml`, or `:auto`. If the
@@ -70,9 +76,8 @@ end
 
 I use the following monkey patch for PhantomJS, because it has zombie
 process issues when it comes to JRuby. This monkey patch kills some minor
-PhantomJS functionality that I don't use, but I've been using it so long that I
-don't remember exactly what functionality it kills. Use at your own
-risk.
+PhantomJS functionality that I don't use, and you can read more about
+what it does and why, in [this blog post](http://jonstokes.com/2014/07/07/monkey-patching-poltergeist-for-web-scraping-with-jruby/).
 
 I put this in `config/initializers/phantomjs.rb`
 
