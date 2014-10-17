@@ -41,8 +41,4 @@ module Sunbro
     @dhttp.close if @dhttp
   rescue IOError
   end
-
-  class Test
-    extend Sunbro
-  end
 end

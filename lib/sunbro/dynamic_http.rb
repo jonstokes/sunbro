@@ -70,34 +70,6 @@ module Sunbro
       return Page.new(url, :error => e)
     end
 
-    #
-    # Does this HTTP client accept cookies from the server?
-    #
-    def accept_cookies?
-      @opts[:accept_cookies]
-    end
-
-    #
-    # The proxy address string
-    #
-    def proxy_host
-      @opts[:proxy_host]
-    end
-
-    #
-    # The proxy port
-    #
-    def proxy_port
-      @opts[:proxy_port]
-    end
-
-    #
-    # HTTP read timeout in seconds
-    #
-    def read_timeout
-      @opts[:read_timeout]
-    end
-
     private
 
     def default_page_format
