@@ -55,6 +55,7 @@ module Sunbro
     end
 
     def get_page(url, opts)
+      reset = opts.fetch(:reset) rescue true
       session.visit(url.to_s)
       page = Page.new(
         session.current_url,
@@ -63,7 +64,7 @@ module Sunbro
         :headers => session.response_headers,
         :force_format => (opts[:force_format] || default_page_format)
       )
-      session.reset!
+      session.reset! if reset
       page
     rescue Capybara::Poltergeist::TimeoutError => e
       restart_session
