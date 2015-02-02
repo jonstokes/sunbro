@@ -57,13 +57,7 @@ module Sunbro
     def get_page(url, opts)
       reset = opts.fetch(:reset) rescue true
       session.visit(url.to_s)
-      page = Page.new(
-        session.current_url,
-        :body => session.html.dup,
-        :code => session.status_code,
-        :headers => session.response_headers,
-        :force_format => (opts[:force_format] || default_page_format)
-      )
+      page = create_page_from_session(url, session, opts)
       session.reset! if reset
       page
     rescue Capybara::Poltergeist::TimeoutError => e
@@ -72,6 +66,28 @@ module Sunbro
     end
 
     private
+
+    def create_page_from_session(url, session, opts)
+      url = url.to_s
+      if url == session.current_url
+        Page.new(
+            session.current_url,
+            :body => session.html.dup,
+            :code => session.status_code,
+            :headers => session.response_headers,
+            :force_format => (opts[:force_format] || default_page_format)
+        )
+      else
+        Page.new(
+            session.current_url,
+            :body => session.html.dup,
+            :code => 301,
+            :redirect_from => url,
+            :headers => session.response_headers,
+            :force_format => (opts[:force_format] || default_page_format)
+        )
+      end
+    end
 
     def default_page_format
       # Don't force the page format if the default format is set to :any

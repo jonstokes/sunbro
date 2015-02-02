@@ -44,6 +44,7 @@ module Sunbro
       @fetched = !params[:code].nil?
       @force_format = params[:force_format]
       @body = params[:body]
+      @redirect_from = params[:redirect_from]
     end
 
     #
