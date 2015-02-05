@@ -21,11 +21,17 @@ module Sunbro
     # Just gets the final destination page.
     #
     def fetch_page(url, opts={})
+      original_url = url.dup
       pages = fetch_pages(url, opts)
-      return pages.first if (pages.count == 1)
-
-      pages.last.redirect_from = pages.first.url
-      pages.last
+      if pages.count == 1
+        page = pages.first
+        page.url = original_url
+        page
+      else
+        page = pages.last
+        page.redirect_from = original_url
+        page
+      end
     end
 
     #

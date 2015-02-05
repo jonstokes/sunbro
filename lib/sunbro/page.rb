@@ -2,7 +2,7 @@ module Sunbro
   class Page
 
     # The URL of the page
-    attr_reader :url
+    attr_accessor :url
     # The raw HTTP response body of the page
     attr_reader :body
     # Headers of the HTTP response
