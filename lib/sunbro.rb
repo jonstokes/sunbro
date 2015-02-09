@@ -17,13 +17,11 @@ module Sunbro
   MAX_RETRIES = 5
 
   def get_page(link, opts={})
-    @http ||= HTTP.new
-    fetch_with_connection(@http, link, opts)
+    fetch_with_connection(http, link, opts)
   end
 
   def render_page(link, opts={})
-    @dhttp ||= DynamicHTTP.new
-    fetch_with_connection(@dhttp, link, opts)
+    fetch_with_connection(dhttp, link, opts)
   end
 
   def fetch_with_connection(conn, link, opts)
@@ -34,6 +32,14 @@ module Sunbro
     end until page.try(:present?) || (tries -= 1).zero?
     page.discard_doc! unless page.is_valid?
     page
+  end
+
+  def http
+    @http ||= HTTP.new
+  end
+
+  def dhttp
+    @dhttp ||= DynamicHTTP.new
   end
 
   def close_http_connections
