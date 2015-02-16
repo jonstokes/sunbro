@@ -46,7 +46,7 @@ module Sunbro
       begin
         tries ||= 5
         get_page(url, opts)
-      rescue Capybara::Poltergeist::DeadClient, Errno::EPIPE, NoMethodError, Capybara::Poltergeist::BrowserError => e
+      rescue IOError, Capybara::Poltergeist::DeadClient, Errno::EPIPE, NoMethodError, Capybara::Poltergeist::BrowserError => e
         restart_session
         retry unless (tries -= 1).zero?
         close
