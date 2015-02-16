@@ -9,6 +9,8 @@ module Sunbro
 
     def close
       @session.driver.quit
+    rescue IOError
+      nil
     end
 
     def new_session
