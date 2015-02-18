@@ -11,11 +11,8 @@ module Sunbro
     end
 
     def close
-      @connections.each do |host, ports|
-        ports.each do |port, connection|
-          connection.finish
-        end
-      end
+      # Deprecated with move to RestClient
+      true
     end
 
     #
