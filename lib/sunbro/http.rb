@@ -3,6 +3,8 @@ module Sunbro
     # Maximum number of redirects to follow on each get_response
     REDIRECT_LIMIT = 5
 
+    class RestResponse < Struct.new(:body, :headers, :code, :location); end
+
     def initialize(opts = {})
       @connections = {}
       @opts = opts
@@ -44,15 +46,15 @@ module Sunbro
       begin
         url = convert_to_uri(url) unless url.is_a?(URI)
         pages = []
-        get(url, referer) do |response, code, location, redirect_to, response_time|
-          pages << Page.new(location, :body => response.body.dup,
-                                      :code => code,
-                                      :headers => response.to_hash,
-                                      :referer => referer,
-                                      :depth => depth,
-                                      :redirect_to => redirect_to,
+        get(url) do |response, code, location, redirect_to, response_time|
+          pages << Page.new(location, :body          => response.body.dup,
+                                      :code          => code,
+                                      :headers       => response.headers.stringify_keys,
+                                      :referer       => referer,
+                                      :depth         => depth,
+                                      :redirect_to   => redirect_to,
                                       :response_time => response_time,
-                                      :force_format => force_format)
+                                      :force_format  => force_format)
         end
 
         return pages
@@ -124,7 +126,7 @@ module Sunbro
     # Yields the response object, response code, and URI location
     # for each response.
     #
-    def get(url, referer = nil)
+    def get(url)
       limit = redirect_limit
       loc = url
       begin
@@ -132,9 +134,9 @@ module Sunbro
           # request url
           loc = url.merge(loc) if loc.relative?
 
-          response, response_time = get_response(loc, referer)
+          response, response_time = get_response(loc)
           code = Integer(response.code)
-          redirect_to = response.is_a?(Net::HTTPRedirection) ? URI(response['location']).normalize : nil
+          redirect_to = 300.upto(307).include?(response['code']) ? URI(response['location']).normalize : nil
           yield response, code, loc, redirect_to, response_time
           limit -= 1
       end while (loc = redirect_to) && allowed?(redirect_to, url) && limit > 0
@@ -147,17 +149,22 @@ module Sunbro
       full_path = url.query.nil? ? url.path : "#{url.path}?#{url.query}"
 
       opts = {}
-      opts['User-Agent'] = user_agent if user_agent
-      opts['Referer'] = referer.to_s if referer
+      opts[:headers] = {
+          user_agent: user_agent
+      } if user_agent
 
       retries = 0
       begin
         start = Time.now()
-        # format request
-        req = Net::HTTP::Get.new(full_path, opts)
-        # HTTP Basic authentication
-        req.basic_auth url.user, url.password if url.user
-        response = connection(url).request(req)
+        response = RestResponse.new
+
+        # This causes RestClient to skip following the redirect automatically
+        connection(url)[full_path].get(opts) do |res, request, result|
+          response.body     = res.body
+          response.headers  = res.headers
+          response.code     = res.code
+          response.location = res.headers[:location]
+        end
         finish = Time.now()
         response_time = ((finish - start) * 1000).round
         return response, response_time
@@ -180,16 +187,12 @@ module Sunbro
     end
 
     def refresh_connection(url)
-      http = Net::HTTP.new(url.host, url.port, proxy_host, proxy_port)
+      @connections[url.host][url.port] = RestClient::Resource.new(
+          "#{url.scheme}://#{url.host}",
+          timeout:    read_timeout || 5,
+          verify_ssl: OpenSSL::SSL::VERIFY_NONE
+      )
 
-      http.read_timeout = read_timeout if !!read_timeout
-
-      if url.scheme == 'https'
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-
-      @connections[url.host][url.port] = http.start
     end
 
     def verbose?

@@ -1,6 +1,5 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'active_support'
+require 'rspec'
+require 'mocktra'
 require 'sunbro'
 
 RSpec.configure do |config|

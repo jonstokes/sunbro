@@ -1,7 +1,8 @@
 require 'nokogiri'
 require 'capybara/poltergeist'
-require 'net/http/persistent'
+require 'rest-client'
 require 'webrick/cookie'
+require 'active_support/all'
 
 %w(
   sunbro/version

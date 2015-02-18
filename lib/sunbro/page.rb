@@ -98,7 +98,8 @@ module Sunbro
     # The content-type returned by the HTTP request for this page
     #
     def content_type
-      headers['content-type'].first
+      return headers['content-type'].first if headers['content-type'].first.present?
+      headers['content_type']
     end
 
     #

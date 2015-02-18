@@ -1,10 +1,11 @@
 require 'spec_helper'
-require 'mocktra'
+require 'open-uri'
 
 describe Sunbro::Page do
 
   before :each do
     @http = Sunbro::HTTP.new(verbose: true)
+    @body = "<html><head><title>Title</title></head><body><p>Body text</p></body></html>"
 
     Mocktra("www.retailer.com") do
       get '/1.html' do
@@ -25,7 +26,9 @@ describe Sunbro::Page do
     it "fetches a single page" do
       url = "http://www.retailer.com/1.html"
 
+      res = open(url).read
       page = @http.fetch_page(url)
+      expect(page.body).to eq(@body)
       expect(page.url.to_s).to eq(url)
       expect(page.redirect_to).to be_nil
       expect(page.redirect_from).to be_nil
