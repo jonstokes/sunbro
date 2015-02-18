@@ -162,6 +162,9 @@ module Sunbro
           response.code     = res.code
           response.location = res.headers[:location]
         end
+
+        response.body.encode!("UTF-8", invalid: :replace, undef: :replace, :replace=>"?") if response.body
+
         finish = Time.now()
         response_time = ((finish - start) * 1000).round
         return response, response_time
