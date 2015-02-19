@@ -3,7 +3,13 @@ module Sunbro
     # Maximum number of redirects to follow on each get_response
     REDIRECT_LIMIT = 5
 
-    class RestResponse < Struct.new(:body, :headers, :code, :location); end
+    class RestResponse < Struct.new(:body, :headers, :code, :location)
+      def clean!
+        body.present?
+      rescue ArgumentError
+        body.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, :replace=>' ')
+      end
+    end
 
     def initialize(opts = {})
       @connections = {}
@@ -163,10 +169,9 @@ module Sunbro
           response.location = res.headers[:location]
         end
 
-        response.body.encode!("UTF-8", invalid: :replace, undef: :replace, :replace=>"?") if response.body
-
         finish = Time.now()
         response_time = ((finish - start) * 1000).round
+        response.clean!
         return response, response_time
       rescue Timeout::Error, Net::HTTPBadResponse, EOFError => e
         puts e.inspect if verbose?
