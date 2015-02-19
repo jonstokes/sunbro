@@ -7,7 +7,8 @@ module Sunbro
       def clean!
         body.present?
       rescue ArgumentError
-        body.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, :replace=>' ')
+        body.encode!('UTF-16', 'UTF-8', :invalid => :replace, :replace => '')
+        body.encode!('UTF-8', 'UTF-16')
       end
     end
 
@@ -172,6 +173,7 @@ module Sunbro
         finish = Time.now()
         response_time = ((finish - start) * 1000).round
         response.clean!
+
         return response, response_time
       rescue Timeout::Error, Net::HTTPBadResponse, EOFError => e
         puts e.inspect if verbose?

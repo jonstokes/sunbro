@@ -70,9 +70,6 @@ module Sunbro
 
     def present?
       !error && code && body.present? && doc
-    rescue ArgumentError
-      Rails.logger.info "## Invalid byte sequence at #{url}"
-      false
     end
 
     #
