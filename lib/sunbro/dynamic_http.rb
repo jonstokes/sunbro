@@ -1,10 +1,12 @@
 module Sunbro
   class DynamicHTTP
+    include Sunbro::Retryable
+
     attr_reader :session
 
     def initialize(opts = {})
       @opts = opts
-      new_session
+      retryable { new_session }
     end
 
     def close
@@ -17,6 +19,7 @@ module Sunbro
       Capybara.register_driver :poltergeist do |app|
         Capybara::Poltergeist::Driver.new(
           app,
+          timeout: 10,
           js_errors: false,
           phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes']
         )
@@ -37,7 +40,7 @@ module Sunbro
 
     def restart_session
       close
-      new_session
+      retryable { new_session }
     end
 
     #
