@@ -11,6 +11,7 @@ require 'active_support/all'
   sunbro/dynamic_http
   sunbro/http
   sunbro/page
+  sunbro/initialize
 ).each do |f|
   require f
 end

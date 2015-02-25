@@ -21,7 +21,11 @@ module Sunbro
           app,
           timeout: 10,
           js_errors: false,
-          phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes']
+          phantomjs_options: [
+              '--load-images=no',
+              '--ignore-ssl-errors=yes',
+              "--proxy=#{Sunbro::Settings.proxy_host}:#{Sunbro::Settings.proxy_port}"
+          ],
         )
       end
       Capybara.default_driver = :poltergeist

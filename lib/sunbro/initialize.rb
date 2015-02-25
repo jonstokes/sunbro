@@ -1,0 +1,1 @@
+RestClient.proxy = Sunbro::Settings.proxy_url
