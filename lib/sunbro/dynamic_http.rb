@@ -21,11 +21,7 @@ module Sunbro
           app,
           timeout: 10,
           js_errors: false,
-          phantomjs_options: [
-              '--load-images=no',
-              '--ignore-ssl-errors=yes',
-              "--proxy=#{Sunbro::Settings.proxy_host}:#{Sunbro::Settings.proxy_port}"
-          ],
+          phantomjs_options: phantomjs_options,
         )
       end
       Capybara.default_driver = :poltergeist
@@ -36,6 +32,20 @@ module Sunbro
         'User-Agent' => user_agent
       }
       @session
+    end
+
+    def phantomjs_options
+      @phantomjs_options ||= begin
+        opts = [ '--load-images=no', '--ignore-ssl-errors=yes' ]
+        if Sunbro::Settings.proxy_host
+          if Sunbro::Settings.proxy_port
+            opts << "--proxy=#{Sunbro::Settings.proxy_host}:#{Sunbro::Settings.proxy_port}"
+          else
+            opts << "--proxy=#{Sunbro::Settings.proxy_host}"
+          end
+        end
+        opts
+      end
     end
 
     def user_agent

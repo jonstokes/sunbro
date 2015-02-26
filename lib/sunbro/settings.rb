@@ -12,50 +12,58 @@ module Sunbro
     class SettingsData < Struct.new(:user_agent, :proxy_url, :proxy_host, :proxy_port, :phantomjs_user_agent, :page_format);end
 
     def self.configure
-      @sunbro_configuration ||= SettingsData.new
-      yield @sunbro_configuration
+      @configuration ||= SettingsData.new
+      yield @configuration
     end
 
     def self.proxy_url
       return unless configured?
-      @sunbro_configuration.proxy_url
+      if @configuration.proxy_url
+        @configuration.proxy_url
+      elsif @configuration.proxy_host
+        if @configuration.proxy_port
+          "http://#{@configuration.proxy_host}:#{@configuration.proxy_port}/"
+        else
+          "http://#{@configuration.proxy_host}/"
+        end
+      end
     end
 
     def self.proxy_host
       return unless configured?
-      if @sunbro_configuration.proxy_url
-        @sunbro_configuration.proxy_host = URI.parse(proxy_url).host
+      if @configuration.proxy_url
+        @configuration.proxy_host = URI.parse(proxy_url).host
       else
-        @sunbro_configuration.proxy_host
+        @configuration.proxy_host
       end
     end
 
     def self.proxy_port
       return unless configured?
-      if @sunbro_configuration.proxy_url
-        @sunbro_configuration.proxy_port = URI.parse(proxy_url).port
+      if @configuration.proxy_url
+        @configuration.proxy_port = URI.parse(proxy_url).port
       else
-        @sunbro_configuration.proxy_port
+        @configuration.proxy_port
       end
     end
 
     def self.user_agent
       return DEFAULTS[:user_agent] unless configured?
-      @sunbro_configuration.user_agent
+      @configuration.user_agent
     end
 
     def self.phantomjs_user_agent
       return DEFAULTS[:phantomjs_user_agent] unless configured?
-      @sunbro_configuration.phantomjs_user_agent
+      @configuration.phantomjs_user_agent
     end
 
     def self.page_format
       return DEFAULTS[:page_format] unless configured?
-      @sunbro_configuration.page_format
+      @configuration.page_format
     end
 
     def self.configured?
-      !!@sunbro_configuration
+      !!@configuration
     end
   end
 end

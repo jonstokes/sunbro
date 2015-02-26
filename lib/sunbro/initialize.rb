@@ -1,1 +1,1 @@
-RestClient.proxy = Sunbro::Settings.proxy_url
+RestClient.proxy = Sunbro::Settings.proxy_url if Sunbro::Settings.proxy_url
