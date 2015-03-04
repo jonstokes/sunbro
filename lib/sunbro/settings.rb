@@ -49,12 +49,12 @@ module Sunbro
 
     def self.user_agent
       return DEFAULTS[:user_agent] unless configured?
-      @configuration.user_agent
+      @configuration.user_agent || DEFAULTS[:user_agent]
     end
 
     def self.phantomjs_user_agent
       return DEFAULTS[:phantomjs_user_agent] unless configured?
-      @configuration.phantomjs_user_agent
+      @configuration.phantomjs_user_agent || DEFAULTS[:phantomjs_user_agent]
     end
 
     def self.page_format
