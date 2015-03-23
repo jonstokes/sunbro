@@ -1,12 +1,11 @@
 module Sunbro
   class DynamicHTTP
-    include Sunbro::Retryable
 
     attr_reader :session
 
     def initialize(opts = {})
       @opts = opts
-      retryable { new_session }
+      Retryable.retryable { new_session }
     end
 
     def close
@@ -54,7 +53,7 @@ module Sunbro
 
     def restart_session
       close
-      retryable { new_session }
+      Retryable.retryable { new_session }
     end
 
     #

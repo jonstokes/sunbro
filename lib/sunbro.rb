@@ -3,9 +3,9 @@ require 'capybara/poltergeist'
 require 'rest-client'
 require 'webrick/cookie'
 require 'active_support/all'
+require 'retryable'
 
 %w(
-  sunbro/retryable
   sunbro/version
   sunbro/settings
   sunbro/dynamic_http

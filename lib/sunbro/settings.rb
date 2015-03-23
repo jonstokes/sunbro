@@ -1,5 +1,3 @@
-require 'hashie'
-
 module Sunbro
   module Settings
 
