@@ -74,8 +74,10 @@ module Sunbro
 
     def get_page(url, opts)
       reset = opts.fetch(:reset) rescue true
+      start = Time.current.to_i
       session.visit(url.to_s)
       page = create_page_from_session(url, session, opts)
+      page.response_time = ((Time.now - start) * 1000).round
       session.reset! if reset
       page
     rescue Capybara::Poltergeist::TimeoutError => e
