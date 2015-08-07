@@ -11,7 +11,6 @@ require 'retryable'
   sunbro/dynamic_http
   sunbro/http
   sunbro/page
-  sunbro/initialize
 ).each do |f|
   require f
 end

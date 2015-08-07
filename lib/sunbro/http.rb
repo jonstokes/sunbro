@@ -13,6 +13,7 @@ module Sunbro
     end
 
     def initialize(opts = {})
+      RestClient.proxy ||= Sunbro::Settings.proxy_url
       @connections = {}
       @opts = opts
     end
