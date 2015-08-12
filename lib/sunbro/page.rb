@@ -64,7 +64,7 @@ module Sunbro
       end
     end
 
-    def is_valid?
+    def valid?
       (url != "about:blank") && !not_found? && present?
     end
 
@@ -151,7 +151,7 @@ module Sunbro
         href = doc.search('//head/base/@href')
         URI(href.to_s) unless href.nil? rescue nil
       end unless @base
-      
+
       return nil if @base && @base.to_s().empty?
       @base
     end
